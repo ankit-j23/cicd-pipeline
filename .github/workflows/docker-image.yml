@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Login to DockerHub
+      env:
+        DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+        DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      run: docker login -u $DOCKER_USERNAME -p DOCKER_PASSWORD
+    - name: Build docker Image
+      run: docker build -t ankitdocher1/cice-pipeline:0.0.1.Release .
+    - name: Push to DockerHub
+      run: docker push ankitdocher1/cice-pipeline:latest
